@@ -7,4 +7,4 @@ unzip_all "$next_zipfile"
 fi
 }
 
-unzip_all 37366.zip
+unzip_all doc.zip
